@@ -1,14 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-
-import 'button.dart';
 
 class StudentRegestrationPage extends ConsumerStatefulWidget {
   const StudentRegestrationPage({super.key, required this.title});
@@ -18,23 +13,21 @@ class StudentRegestrationPage extends ConsumerStatefulWidget {
   @override
   StudentPageState createState() => StudentPageState();
 }
+
 class StudentPageState extends ConsumerState<StudentRegestrationPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text(widget.title) ,),
-
-
-
+      appBar: AppBar(title: Text(widget.title)),
+      body: CalendarWithLocalStorage(), // ← カレンダーを表示
     );
   }
 }
 
 class CalendarWithLocalStorage extends StatefulWidget {
   @override
-  _CalendarWithLocalStorageState createState() => _CalendarWithLocalStorageState();
+  _CalendarWithLocalStorageState createState() =>
+      _CalendarWithLocalStorageState();
 }
 
 class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
@@ -96,7 +89,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
         builder: (_) => AlertDialog(
           title: Text(isTaken ? "キャンセル確認" : "予約確認"),
           content: Text(
-              '${DateFormat('yyyy/MM/dd').format(date)} ${selectedTime} を${isTaken ? "キャンセル" : "予約"}しますか？'),
+              '${DateFormat('yyyy/MM/dd').format(date)} $selectedTime を${isTaken ? "キャンセル" : "予約"}しますか？'),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context, false), child: Text('戻る')),
             ElevatedButton(
@@ -119,7 +112,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
         });
         await _saveReservations();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('${selectedTime} を${isTaken ? "キャンセル" : "予約"}しました'),
+          content: Text('$selectedTime を${isTaken ? "キャンセル" : "予約"}しました'),
         ));
       }
     }
@@ -127,32 +120,33 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      body: Expanded(
-        child: TableCalendar(
-          firstDay: DateTime.utc(2023, 1, 1),
-          lastDay: DateTime.utc(2026, 1, 1),
-          focusedDay: _selectedDay,
-          selectedDayPredicate: (d) => isSameDay(d, _selectedDay),
-          calendarBuilders: CalendarBuilders(
-            markerBuilder: (context, date, _) {
-              final key = DateFormat('yyyy-MM-dd').format(date);
-              if (_reservations[key]?.isNotEmpty ?? false) {
-                return Positioned(
-                  bottom: 1,
-                  child: Icon(Icons.circle, size: 6, color: Colors.green),
-                );
-              }
-              return null;
+    return Column(
+      children: [
+        Expanded(
+          child: TableCalendar(
+            firstDay: DateTime.utc(2023, 1, 1),
+            lastDay: DateTime.utc(2026, 1, 1),
+            focusedDay: _selectedDay,
+            selectedDayPredicate: (d) => isSameDay(d, _selectedDay),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, _) {
+                final key = DateFormat('yyyy-MM-dd').format(date);
+                if (_reservations[key]?.isNotEmpty ?? false) {
+                  return Positioned(
+                    bottom: 1,
+                    child: Icon(Icons.circle, size: 6, color: Colors.green),
+                  );
+                }
+                return null;
+              },
+            ),
+            onDaySelected: (selected, _) {
+              setState(() => _selectedDay = selected);
+              _selectTime(selected);
             },
           ),
-          onDaySelected: (selected, _) {
-            setState(() => _selectedDay = selected);
-            _selectTime(selected);
-          },
         ),
-      ),
+      ],
     );
   }
 }
