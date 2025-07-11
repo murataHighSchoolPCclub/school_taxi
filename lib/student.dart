@@ -16,66 +16,147 @@ class StudentPageState extends ConsumerState<StudentPage> {
   String? selectedValue;
   bool showError=false;
 
+  final TextEditingController _localController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text(widget.title) ,),
+      appBar: AppBar(
+        title:Center(
+          child: FittedBox(fit: BoxFit.scaleDown,
+            child: Row(
+              children: [
+                Text(widget.title , style: TextStyle(color: Colors.white), ),
+                SizedBox(width: 60,)
+              ],
+            ),
+          ),
+        ) ,
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.blue,
+        centerTitle: true,
+
+      ),
 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             SizedBox(
-              height: 300,
+              height: 270,
                 child: Image.asset('images/school.jpg'),
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-
-                  DropdownButtonMenu(
-                    title:"自治体名",
-                    list: ["あいう"],
-                    value: selectedValue,
-                    showError: showError,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value;
-                        showError = false;
-
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20,),
-                  ElevatedButton(
-                      onPressed: (){
+              child: FittedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                
+                    DropdownButtonMenu(
+                      title:"自治体名",
+                      list: ["あいう"],
+                      value: selectedValue,
+                      showError: showError,
+                      onChanged: (value) {
                         setState(() {
-                          showError = selectedValue == null;
+                          selectedValue = value;
+                          showError = false;
+                
                         });
-                      },
-                      child: Text("新規登録")
-                  ),
-                  
+                      }, controller: _localController,
+                    ),
+                
+                    DropdownButtonMenu(
+                      title:"学校",
+                      list: ["あいう"],
+                      value: selectedValue,
+                      showError: showError,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                          showError = false;
+                
+                        });
+                      }, controller: _localController,
+                    ),
+                
+                    DropdownButtonMenu(
+                      title:"ログインID",
+                      list: ["あいう"],
+                      value: selectedValue,
+                      showError: showError,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                          showError = false;
+                
+                        });
+                      }, controller: _localController,
+                    ),
+                
+                    DropdownButtonMenu(
+                      title:"パスワード",
+                      list: ["あいう"],
+                      value: selectedValue,
+                      showError: showError,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value;
+                          showError = false;
+                
+                        });
+                      }, controller: _localController,
+                    ),
+                
+
+                
+                
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SizedBox( height: 70,
+                            child: ElevatedButton(
+                              style:  ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
+                                onPressed: (){
+                                  setState(() {
+                                    showError = selectedValue == null;
+                                  });
+                                },
+                                child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
+                            ),
+                          ),
+                        ),
 
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        height: 70,
-                        width: MediaQuery.of(context).size.width * 1/3,
-                          child: NavigateButton(title: "新規登録", next: StudentRegestrationPage(title: "新規登録"), buttonColor: Colors.red, textColor: Colors.white)),
-                      SizedBox(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width * 1/3,
-                          child: NavigateButton(title: "ログイン", next: StudentRegestrationPage(title: "ログイン"), buttonColor: Colors.blue, textColor: Colors.white)),
-                    ],
-                  ),
-                ],
-
-
+                
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SizedBox( height: 70,
+                            child: ElevatedButton(
+                              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
+                                onPressed: (){
+                                  setState(() {
+                                    showError = selectedValue == null;
+                                  });
+                                },
+                                child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                
+                
+                
+                
+                  ],
+                
+                
+                ),
               ),
             )
           ],

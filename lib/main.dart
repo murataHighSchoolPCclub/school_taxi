@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_taxi/button.dart';
 import 'package:school_taxi/change.dart';
+import 'package:school_taxi/local.dart';
 import 'package:school_taxi/student.dart';
 
 void main() {
@@ -86,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: MediaQuery.of(context).size.width * 4 / 5,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: NavigateButton(title: "自治体", next: StudentPage(title: "自治体"), buttonColor: Colors.orange, textColor: Colors.white,),
+                      child: NavigateButton(title: "自治体", next: LocalPage(title: "自治体"), buttonColor: Colors.orange, textColor: Colors.white,),
                     ),
                   ),
                 ],
