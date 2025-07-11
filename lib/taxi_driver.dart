@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:school_taxi/student.dart';
 import 'package:school_taxi/student_regestration.dart';
 
 import 'button.dart';
 
-class LocalPage extends ConsumerStatefulWidget {
-  const LocalPage({super.key, required this.title});
+class TaxiDriverPage extends ConsumerStatefulWidget {
+  const TaxiDriverPage({super.key, required this.title});
 
   final String title;
 
   @override
-  LocalPageState createState() => LocalPageState();
+  TaxiDriverPageState createState() => TaxiDriverPageState();
 }
-class LocalPageState extends ConsumerState<LocalPage> {
+class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
   String? selectedValue;
   bool showError=false;
 
@@ -22,12 +21,13 @@ class LocalPageState extends ConsumerState<LocalPage> {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.green,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -39,7 +39,7 @@ class LocalPageState extends ConsumerState<LocalPage> {
           children: <Widget>[
             SizedBox(
               height: 300,
-              child: Image.asset('images/local.jpg'),
+              child: Image.asset('images/taxi_driver.jpg'),
             ),
             Expanded(
               child: Column(
@@ -112,8 +112,6 @@ class LocalPageState extends ConsumerState<LocalPage> {
                             onPressed: (){
                               setState(() {
                                 showError = selectedValue == null;
-
-
                               });
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
@@ -126,6 +124,7 @@ class LocalPageState extends ConsumerState<LocalPage> {
                             onPressed: (){
                               setState(() {
                                 showError = selectedValue == null;
+
                               });
                             },
                             child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )

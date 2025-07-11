@@ -17,6 +17,9 @@ class StudentPageState extends ConsumerState<StudentPage> {
   bool showError=false;
 
   final TextEditingController _localController = TextEditingController();
+  final TextEditingController _schoolController = TextEditingController();
+  final TextEditingController _loginController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
 
   @override
@@ -52,7 +55,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                
+
                     DropdownButtonMenu(
                       title:"自治体名",
                       list: ["あいう"],
@@ -62,51 +65,51 @@ class StudentPageState extends ConsumerState<StudentPage> {
                         setState(() {
                           selectedValue = value;
                           showError = false;
-                
+
                         });
                       }, controller: _localController,
                     ),
-                
+
                     DropdownButtonMenu(
                       title:"学校",
-                      list: ["あいう"],
+                      list: ["あう"],
                       value: selectedValue,
                       showError: showError,
                       onChanged: (value) {
                         setState(() {
                           selectedValue = value;
                           showError = false;
-                
+
                         });
-                      }, controller: _localController,
+                      }, controller: _schoolController,
                     ),
-                
+
                     DropdownButtonMenu(
                       title:"ログインID",
-                      list: ["あいう"],
+                      list: ["あs"],
                       value: selectedValue,
                       showError: showError,
                       onChanged: (value) {
                         setState(() {
                           selectedValue = value;
                           showError = false;
-                
+
                         });
-                      }, controller: _localController,
+                      }, controller: _loginController,
                     ),
-                
+
                     DropdownButtonMenu(
                       title:"パスワード",
-                      list: ["あいう"],
+                      list: ["あい"],
                       value: selectedValue,
                       showError: showError,
                       onChanged: (value) {
                         setState(() {
                           selectedValue = value;
                           showError = false;
-                
+
                         });
-                      }, controller: _localController,
+                      }, controller: _passwordController,
                     ),
                 
 
@@ -142,6 +145,8 @@ class StudentPageState extends ConsumerState<StudentPage> {
                                   setState(() {
                                     showError = selectedValue == null;
                                   });
+
+
                                 },
                                 child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
                             ),

@@ -3,6 +3,7 @@ import 'package:school_taxi/button.dart';
 import 'package:school_taxi/change.dart';
 import 'package:school_taxi/local.dart';
 import 'package:school_taxi/student.dart';
+import 'package:school_taxi/taxi_driver.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                      width: MediaQuery.of(context).size.width * 4 / 5,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: NavigateButton(title: "タクシー運転手", next: StudentPage(title: "タクシー運転手"), buttonColor: Colors.green, textColor: Colors.white,),
+                        child: NavigateButton(title: "タクシー運転手", next: TaxiDriverPage(title: "タクシー運転手"), buttonColor: Colors.green, textColor: Colors.white,),
                       ),
                   ),
                   SizedBox(
