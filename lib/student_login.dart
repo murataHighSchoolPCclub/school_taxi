@@ -1,42 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:school_taxi/student.dart';
-import 'package:school_taxi/student_login.dart';
 import 'package:school_taxi/student_regestration.dart';
 
 import 'button.dart';
 
-class StudentPage extends ConsumerStatefulWidget {
-  const StudentPage({super.key, required this.title});
+class StudentLoginPage extends ConsumerStatefulWidget {
+  const StudentLoginPage({super.key, required this.title});
 
   final String title;
 
   @override
-  StudentPageState createState() => StudentPageState();
+  StudentLoginPageState createState() => StudentLoginPageState();
 }
-class StudentPageState extends ConsumerState<StudentPage> {
-  String? selectedValue1;
-  String? selectedValue2;
-  String? selectedValue3;
-  String? selectedValue4;
-
-  bool showError1=false;
-  bool showError2=false;
-  bool showError3=false;
-  bool showError4=false;
+class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
+  String? selectedValue;
+  bool showError=false;
 
   final TextEditingController _localController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.orange,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -58,12 +49,12 @@ class StudentPageState extends ConsumerState<StudentPage> {
                   DropdownButtonMenu(
                     title:"自治体名",
                     list: ["あいう"],
-                    value: selectedValue1,
-                    showError: showError1,
+                    value: selectedValue,
+                    showError: showError,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue1 = value;
-                        showError1 = false;
+                        selectedValue = value;
+                        showError = false;
 
                       });
                     }, controller: _localController,
@@ -72,12 +63,12 @@ class StudentPageState extends ConsumerState<StudentPage> {
                   DropdownButtonMenu(
                     title:"学校",
                     list: ["あう"],
-                    value: selectedValue2,
-                    showError: showError2,
+                    value: selectedValue,
+                    showError: showError,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue2 = value;
-                        showError2 = false;
+                        selectedValue = value;
+                        showError = false;
 
                       });
                     }, controller: _schoolController,
@@ -86,12 +77,12 @@ class StudentPageState extends ConsumerState<StudentPage> {
                   DropdownButtonMenu(
                     title:"ログインID",
                     list: ["あs"],
-                    value: selectedValue3,
-                    showError: showError3,
+                    value: selectedValue,
+                    showError: showError,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue3 = value;
-                        showError3 = false;
+                        selectedValue = value;
+                        showError = false;
 
                       });
                     }, controller: _loginController,
@@ -100,12 +91,12 @@ class StudentPageState extends ConsumerState<StudentPage> {
                   DropdownButtonMenu(
                     title:"パスワード",
                     list: ["あい"],
-                    value: selectedValue4,
-                    showError: showError4,
+                    value: selectedValue,
+                    showError: showError,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue4 = value;
-                        showError4 = false;
+                        selectedValue = value;
+                        showError = false;
 
                       });
                     }, controller: _passwordController,
@@ -120,17 +111,10 @@ class StudentPageState extends ConsumerState<StudentPage> {
                             style:  ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
                             onPressed: (){
                               setState(() {
-                                showError1 = selectedValue1 == null;
-                                showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
+                                showError = selectedValue == null;
+
+
                               });
-                              if(!(selectedValue1 == null ||
-                                  selectedValue2 == null ||
-                                  selectedValue3 == null ||
-                                  selectedValue4 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentLoginPage(title: "新規登録")));
-                              }
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
                         ),
@@ -141,11 +125,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
                             style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
                             onPressed: (){
                               setState(() {
-                                showError1 = selectedValue1 == null;
-                                showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
-
+                                showError = selectedValue == null;
                               });
                             },
                             child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
@@ -153,7 +133,13 @@ class StudentPageState extends ConsumerState<StudentPage> {
                       ),
                     ],
                   ),
+
+
+
+
                 ],
+
+
               ),
             )
           ],
