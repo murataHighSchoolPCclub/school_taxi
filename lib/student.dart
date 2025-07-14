@@ -122,13 +122,9 @@ class StudentPageState extends ConsumerState<StudentPage> {
                               setState(() {
                                 showError1 = selectedValue1 == null;
                                 showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
                               });
                               if(!(selectedValue1 == null ||
-                                  selectedValue2 == null ||
-                                  selectedValue3 == null ||
-                                  selectedValue4 == null )){
+                                  selectedValue2 == null )){
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => StudentLoginPage(title: "新規登録")));
                               }
                             },

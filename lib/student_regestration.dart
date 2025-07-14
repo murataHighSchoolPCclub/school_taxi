@@ -11,10 +11,10 @@ class StudentRegestrationPage extends ConsumerStatefulWidget {
   final String title;
 
   @override
-  StudentPageState createState() => StudentPageState();
+  StudentRegestrationPageState createState() => StudentRegestrationPageState();
 }
 
-class StudentPageState extends ConsumerState<StudentRegestrationPage> {
+class StudentRegestrationPageState extends ConsumerState<StudentRegestrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
