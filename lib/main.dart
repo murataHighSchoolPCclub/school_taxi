@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:school_taxi/button.dart';
 import 'package:school_taxi/change.dart';
 import 'package:school_taxi/local.dart';
 import 'package:school_taxi/student.dart';
 import 'package:school_taxi/taxi_driver.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ja_JP',null);
   runApp(const MyApp());
 }
 

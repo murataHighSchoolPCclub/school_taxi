@@ -65,7 +65,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
     final selectedTime = await showDialog<String>(
       context: context,
       builder: (_) => SimpleDialog(
-        title: Text('${DateFormat('y/MM/dd').format(date)} 時間を選択'),
+        title: Text('${DateFormat('y/MM/dd (E)','ja_JP').format(date)}  時間を選択'),
         children: List.generate(14, (i) {
           final hour = i + 6;
           final time = '${hour.toString().padLeft(2, '0')}:00';
@@ -89,7 +89,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
         builder: (_) => AlertDialog(
           title: Text(isTaken ? "キャンセル確認" : "予約確認"),
           content: Text(
-              '${DateFormat('yyyy/MM/dd').format(date)} $selectedTime を${isTaken ? "キャンセル" : "予約"}しますか？'),
+              '${DateFormat('yyyy/MM/dd (EEEE)', 'ja_JP').format(date)} $selectedTime を${isTaken ? "キャンセル" : "予約"}しますか？'),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context, false), child: Text('戻る')),
             ElevatedButton(
@@ -124,8 +124,10 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
       children: [
         Expanded(
           child: TableCalendar(
+            locale: 'ja_JP',
             firstDay: DateTime.utc(2023, 1, 1),
-            lastDay: DateTime.utc(2026, 1, 1),
+            lastDay: DateTime.utc(2050, 1, 1),
+
             focusedDay: _selectedDay,
             selectedDayPredicate: (d) => isSameDay(d, _selectedDay),
             calendarBuilders: CalendarBuilders(
@@ -134,7 +136,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
                 if (_reservations[key]?.isNotEmpty ?? false) {
                   return Positioned(
                     bottom: 1,
-                    child: Icon(Icons.circle, size: 6, color: Colors.green),
+                    child: Icon(Icons.text_fields, size: 6, color: Colors.green),
                   );
                 }
                 return null;

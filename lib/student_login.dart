@@ -18,11 +18,13 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
   String? selectedValue2;
   String? selectedValue3;
   String? selectedValue4;
+  String? selectedValue5;
 
   bool showError1=false;
   bool showError2=false;
   bool showError3=false;
   bool showError4=false;
+  bool showError5=false;
   
   
 
@@ -31,13 +33,14 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _invitationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -55,7 +58,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"自治体名",
-                    list: ["あいう"],
+                    list: ["宮城県村田町"],
                     value: selectedValue1,
                     showError: showError1,
                     onChanged: (value) {
@@ -69,7 +72,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"学校",
-                    list: ["あう"],
+                    list: ["村田高校"],
                     value: selectedValue2,
                     showError: showError2,
                     onChanged: (value) {
@@ -83,7 +86,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"ログインID",
-                    list: ["あs"],
+                    list: ["guest"],
                     value: selectedValue3,
                     showError: showError3,
                     onChanged: (value) {
@@ -97,7 +100,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"パスワード",
-                    list: ["あい"],
+                    list: ["password"],
                     value: selectedValue4,
                     showError: showError4,
                     onChanged: (value) {
@@ -107,6 +110,20 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                       });
                     }, controller: _passwordController,
+                  ),
+
+                  DropdownButtonMenu(
+                    title:"招待コード",
+                    list: ["invitation"],
+                    value: selectedValue5,
+                    showError: showError5,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue5 = value;
+                        showError5 = false;
+
+                      });
+                    }, controller: _invitationController,
                   ),
 
                   Row(
@@ -122,11 +139,13 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
                                 showError2 = selectedValue2 == null;
                                 showError3 = selectedValue3 == null;
                                 showError4 = selectedValue4 == null;
+                                showError5 = selectedValue5 == null;
                               });
                               if(!(selectedValue1 == null ||
-                                  selectedValue1 == null ||
-                                  selectedValue1 == null ||
-                                  selectedValue1 == null )){
+                                  selectedValue2 == null ||
+                                  selectedValue3 == null ||
+                                  selectedValue4 == null ||
+                                  selectedValue5 == null )){
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
 
                               }
