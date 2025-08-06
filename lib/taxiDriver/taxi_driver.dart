@@ -1,46 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:school_taxi/student/student.dart';
+import 'package:school_taxi/student/student_login.dart';
+import 'package:school_taxi/student/student_regestration.dart';
 
-import 'student_regestration.dart';
+import '../button.dart';
+import 'taxi_driver_login.dart';
+import 'taxi_driver_screen.dart';
 
-import 'button.dart';
-
-class StudentLoginPage extends ConsumerStatefulWidget {
-  const StudentLoginPage({super.key, required this.title});
+class TaxiDriverPage extends ConsumerStatefulWidget {
+  const TaxiDriverPage({super.key, required this.title});
 
   final String title;
 
   @override
-  StudentLoginPageState createState() => StudentLoginPageState();
+  TaxiDriverPageState createState() => TaxiDriverPageState();
 }
-class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
+class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
   String? selectedValue1;
   String? selectedValue2;
   String? selectedValue3;
   String? selectedValue4;
-  String? selectedValue5;
 
   bool showError1=false;
   bool showError2=false;
   bool showError3=false;
   bool showError4=false;
-  bool showError5=false;
-
-
-
 
   final TextEditingController _localController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _invitationController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.blue,
+        title:Text(widget.title , style: TextStyle(color: Colors.white,)),
+        backgroundColor: Colors.green,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -50,10 +48,13 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            SizedBox(
+              height: 300,
+              child: Image.asset('images/taxi_driver.jpg'),
+            ),
             Expanded(
               child: Column(
-
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
 
                   DropdownButtonMenu(
@@ -72,7 +73,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"学校",
-                    list: ["村田高校"],
+                    list: ["あう"],
                     value: selectedValue2,
                     showError: showError2,
                     onChanged: (value) {
@@ -86,7 +87,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"ログインID",
-                    list: ["guest"],
+                    list: ["あs"],
                     value: selectedValue3,
                     showError: showError3,
                     onChanged: (value) {
@@ -100,7 +101,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                   DropdownButtonMenu(
                     title:"パスワード",
-                    list: ["password"],
+                    list: ["あい"],
                     value: selectedValue4,
                     showError: showError4,
                     onChanged: (value) {
@@ -110,20 +111,6 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
 
                       });
                     }, controller: _passwordController,
-                  ),
-
-                  DropdownButtonMenu(
-                    title:"招待コード",
-                    list: ["invitation"],
-                    value: selectedValue5,
-                    showError: showError5,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue5 = value;
-                        showError5 = false;
-
-                      });
-                    }, controller: _invitationController,
                   ),
 
                   Row(
@@ -137,32 +124,40 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
                               setState(() {
                                 showError1 = selectedValue1 == null;
                                 showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
-                                showError5 = selectedValue5 == null;
                               });
                               if(!(selectedValue1 == null ||
-                                  selectedValue2 == null ||
-                                  selectedValue3 == null ||
-                                  selectedValue4 == null ||
-                                  selectedValue5 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
-
+                                  selectedValue2 == null )){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => TaxiDriverLoginPage(title: "新規登録")));
                               }
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
                         ),
                       ),
 
+                      SizedBox( height: 70,
+                        child: ElevatedButton(
+                            style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
+                            onPressed: (){
+                              setState(() {
+                                showError1 = selectedValue1 == null;
+                                showError2 = selectedValue2 == null;
+                                showError3 = selectedValue3 == null;
+                                showError4 = selectedValue4 == null;
+                              });
+                              if(!(selectedValue1 == null ||
+                                  selectedValue2 == null ||
+                                  selectedValue3 == null ||
+                                  selectedValue4 == null )){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => TaxiDriverMainPage(title: "管理画面", )));
+
+                              }
+                            },
+                            child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
+                        ),
+                      ),
                     ],
                   ),
-
-
-
-
                 ],
-
-
               ),
             )
           ],

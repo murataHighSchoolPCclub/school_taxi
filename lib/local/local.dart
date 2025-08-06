@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:school_taxi/student_regestration.dart';
+import 'package:school_taxi/student/student.dart';
+import 'package:school_taxi/student/student_login.dart';
+import 'package:school_taxi/student/student_regestration.dart';
 
-import 'button.dart';
+import '../button.dart';
+import 'local_login.dart';
+import 'local_screen.dart';
 
-class TaxiDriverPage extends ConsumerStatefulWidget {
-  const TaxiDriverPage({super.key, required this.title});
+class LocalPage extends ConsumerStatefulWidget {
+  const LocalPage({super.key, required this.title});
 
   final String title;
 
   @override
-  TaxiDriverPageState createState() => TaxiDriverPageState();
+  LocalPageState createState() => LocalPageState();
 }
-class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
-  String? selectedValue;
-  bool showError=false;
+class LocalPageState extends ConsumerState<LocalPage> {
+  String? selectedValue1;
+  String? selectedValue2;
+  String? selectedValue3;
+  String? selectedValue4;
+
+  bool showError1=false;
+  bool showError2=false;
+  bool showError3=false;
+  bool showError4=false;
 
   final TextEditingController _localController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
@@ -26,8 +37,8 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.green,
+        title:Text(widget.title , style: TextStyle(color: Colors.white,)),
+        backgroundColor: Colors.orange,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -39,7 +50,7 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
           children: <Widget>[
             SizedBox(
               height: 300,
-              child: Image.asset('images/taxi_driver.jpg'),
+              child: Image.asset('images/local.jpg'),
             ),
             Expanded(
               child: Column(
@@ -48,13 +59,13 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
 
                   DropdownButtonMenu(
                     title:"自治体名",
-                    list: ["あいう"],
-                    value: selectedValue,
-                    showError: showError,
+                    list: ["宮城県村田町"],
+                    value: selectedValue1,
+                    showError: showError1,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue = value;
-                        showError = false;
+                        selectedValue1 = value;
+                        showError1 = false;
 
                       });
                     }, controller: _localController,
@@ -63,12 +74,12 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                   DropdownButtonMenu(
                     title:"学校",
                     list: ["あう"],
-                    value: selectedValue,
-                    showError: showError,
+                    value: selectedValue2,
+                    showError: showError2,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue = value;
-                        showError = false;
+                        selectedValue2 = value;
+                        showError2 = false;
 
                       });
                     }, controller: _schoolController,
@@ -77,12 +88,12 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                   DropdownButtonMenu(
                     title:"ログインID",
                     list: ["あs"],
-                    value: selectedValue,
-                    showError: showError,
+                    value: selectedValue3,
+                    showError: showError3,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue = value;
-                        showError = false;
+                        selectedValue3 = value;
+                        showError3 = false;
 
                       });
                     }, controller: _loginController,
@@ -91,12 +102,12 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                   DropdownButtonMenu(
                     title:"パスワード",
                     list: ["あい"],
-                    value: selectedValue,
-                    showError: showError,
+                    value: selectedValue4,
+                    showError: showError4,
                     onChanged: (value) {
                       setState(() {
-                        selectedValue = value;
-                        showError = false;
+                        selectedValue4 = value;
+                        showError4 = false;
 
                       });
                     }, controller: _passwordController,
@@ -111,8 +122,13 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                             style:  ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
                             onPressed: (){
                               setState(() {
-                                showError = selectedValue == null;
+                                showError1 = selectedValue1 == null;
+                                showError2 = selectedValue2 == null;
                               });
+                              if(!(selectedValue1 == null ||
+                                  selectedValue2 == null )){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LocalLoginPage(title: "新規登録")));
+                              }
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
                         ),
@@ -123,22 +139,25 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                             style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
                             onPressed: (){
                               setState(() {
-                                showError = selectedValue == null;
-
+                                showError1 = selectedValue1 == null;
+                                showError2 = selectedValue2 == null;
+                                showError3 = selectedValue3 == null;
+                                showError4 = selectedValue4 == null;
                               });
+                              if(!(selectedValue1 == null ||
+                                  selectedValue2 == null ||
+                                  selectedValue3 == null ||
+                                  selectedValue4 == null )){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LocalMainPage(title: "管理画面", jititai: '$selectedValue1',)));
+
+                              }
                             },
                             child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
                         ),
                       ),
                     ],
                   ),
-
-
-
-
                 ],
-
-
               ),
             )
           ],

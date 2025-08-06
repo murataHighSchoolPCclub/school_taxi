@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'student_regestration.dart';
 
-import 'button.dart';
+import '../button.dart';
 
 class StudentLoginPage extends ConsumerStatefulWidget {
   const StudentLoginPage({super.key, required this.title});

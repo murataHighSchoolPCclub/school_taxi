@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'student_regestration.dart';
+import 'taxi_driver_screen.dart';
 
-import 'button.dart';
+import '../button.dart';
 
-class StudentLoginPage extends ConsumerStatefulWidget {
-  const StudentLoginPage({super.key, required this.title});
+class TaxiDriverLoginPage extends ConsumerStatefulWidget {
+  const TaxiDriverLoginPage({super.key, required this.title});
 
   final String title;
 
   @override
-  StudentLoginPageState createState() => StudentLoginPageState();
+  TaxiDriverLoginPageState createState() => TaxiDriverLoginPageState();
 }
-class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
+class TaxiDriverLoginPageState extends ConsumerState<TaxiDriverLoginPage> {
   String? selectedValue1;
   String? selectedValue2;
   String? selectedValue3;
@@ -40,7 +40,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
     return Scaffold(
       appBar: AppBar(
         title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.green,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -146,7 +146,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
                                   selectedValue3 == null ||
                                   selectedValue4 == null ||
                                   selectedValue5 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => TaxiDriverMainPage(title: "予約")));
 
                               }
                             },

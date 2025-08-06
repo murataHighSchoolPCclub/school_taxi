@@ -1,42 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:school_taxi/student.dart';
-import 'package:school_taxi/student_login.dart';
-import 'package:school_taxi/student_regestration.dart';
 
-import 'button.dart';
+import '../student/student_regestration.dart';
 
-class StudentPage extends ConsumerStatefulWidget {
-  const StudentPage({super.key, required this.title});
+import '../button.dart';
+import 'local_screen.dart';
+
+class LocalLoginPage extends ConsumerStatefulWidget {
+  const LocalLoginPage({super.key, required this.title});
 
   final String title;
 
   @override
-  StudentPageState createState() => StudentPageState();
+  LocalLoginPageState createState() => LocalLoginPageState();
 }
-class StudentPageState extends ConsumerState<StudentPage> {
+class LocalLoginPageState extends ConsumerState<LocalLoginPage> {
   String? selectedValue1;
   String? selectedValue2;
   String? selectedValue3;
   String? selectedValue4;
+  String? selectedValue5;
 
   bool showError1=false;
   bool showError2=false;
   bool showError3=false;
   bool showError4=false;
+  bool showError5=false;
+
+
+
 
   final TextEditingController _localController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final TextEditingController _invitationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Text(widget.title , style: TextStyle( color: Colors.white,)),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.orange,
         iconTheme: const IconThemeData(color: Colors.white),
 
       ),
@@ -46,18 +51,15 @@ class StudentPageState extends ConsumerState<StudentPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 300,
-              child: Image.asset('images/school.jpg'),
-            ),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
 
                   DropdownButtonMenu(
                     title:"自治体名",
-                    list: ["あいう"],
+                    list: ["宮城県村田町"],
                     value: selectedValue1,
                     showError: showError1,
                     onChanged: (value) {
@@ -71,7 +73,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
 
                   DropdownButtonMenu(
                     title:"学校",
-                    list: ["あう"],
+                    list: ["村田高校"],
                     value: selectedValue2,
                     showError: showError2,
                     onChanged: (value) {
@@ -85,7 +87,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
 
                   DropdownButtonMenu(
                     title:"ログインID",
-                    list: ["あs"],
+                    list: ["guest"],
                     value: selectedValue3,
                     showError: showError3,
                     onChanged: (value) {
@@ -99,7 +101,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
 
                   DropdownButtonMenu(
                     title:"パスワード",
-                    list: ["あい"],
+                    list: ["password"],
                     value: selectedValue4,
                     showError: showError4,
                     onChanged: (value) {
@@ -109,6 +111,20 @@ class StudentPageState extends ConsumerState<StudentPage> {
 
                       });
                     }, controller: _passwordController,
+                  ),
+
+                  DropdownButtonMenu(
+                    title:"招待コード",
+                    list: ["invitation"],
+                    value: selectedValue5,
+                    showError: showError5,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedValue5 = value;
+                        showError5 = false;
+
+                      });
+                    }, controller: _invitationController,
                   ),
 
                   Row(
@@ -122,40 +138,32 @@ class StudentPageState extends ConsumerState<StudentPage> {
                               setState(() {
                                 showError1 = selectedValue1 == null;
                                 showError2 = selectedValue2 == null;
+                                showError3 = selectedValue3 == null;
+                                showError4 = selectedValue4 == null;
+                                showError5 = selectedValue5 == null;
                               });
                               if(!(selectedValue1 == null ||
-                                  selectedValue2 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentLoginPage(title: "新規登録")));
+                                  selectedValue2 == null ||
+                                  selectedValue3 == null ||
+                                  selectedValue4 == null ||
+                                  selectedValue5 == null )){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LocalMainPage(title: "管理画面", jititai: '$selectedValue1',)));
+
                               }
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
                         ),
                       ),
 
-                      SizedBox( height: 70,
-                        child: ElevatedButton(
-                            style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
-                            onPressed: (){
-                              setState(() {
-                                showError1 = selectedValue1 == null;
-                                showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
-                              });
-                              if(!(selectedValue1 == null ||
-                                  selectedValue2 == null ||
-                                  selectedValue3 == null ||
-                                  selectedValue4 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
-
-                              }
-                            },
-                            child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
-                        ),
-                      ),
                     ],
                   ),
+
+
+
+
                 ],
+
+
               ),
             )
           ],

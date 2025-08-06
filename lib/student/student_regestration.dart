@@ -19,8 +19,12 @@ class StudentRegestrationPageState extends ConsumerState<StudentRegestrationPage
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: CalendarWithLocalStorage(), // ← カレンダーを表示
+      body: CalendarWithLocalStorage(),
+
+      // ← カレンダーを表示
     );
+
+
   }
 }
 
