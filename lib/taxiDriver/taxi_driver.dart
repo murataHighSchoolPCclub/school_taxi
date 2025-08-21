@@ -44,16 +44,16 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
       ),
 
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 300,
-              child: Image.asset('images/taxi_driver.jpg'),
-            ),
-            Expanded(
-              child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 300,
+                child: Image.asset('images/taxi_driver.jpg'),
+              ),
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
 
@@ -157,10 +157,11 @@ class TaxiDriverPageState extends ConsumerState<TaxiDriverPage> {
                       ),
                     ],
                   ),
+                  SizedBox( height: 70,),
                 ],
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

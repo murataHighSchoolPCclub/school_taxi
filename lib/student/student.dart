@@ -43,16 +43,16 @@ class StudentPageState extends ConsumerState<StudentPage> {
       ),
 
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 300,
-              child: Image.asset('images/school.jpg'),
-            ),
-            Expanded(
-              child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 300,
+                child: Image.asset('images/school.jpg'),
+              ),
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
 
@@ -156,10 +156,11 @@ class StudentPageState extends ConsumerState<StudentPage> {
                       ),
                     ],
                   ),
+                  SizedBox( height: 70,),
                 ],
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

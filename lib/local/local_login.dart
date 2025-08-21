@@ -47,12 +47,12 @@ class LocalLoginPageState extends ConsumerState<LocalLoginPage> {
       ),
 
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Column(
 
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -164,9 +164,9 @@ class LocalLoginPageState extends ConsumerState<LocalLoginPage> {
                 ],
 
 
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

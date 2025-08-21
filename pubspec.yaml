@@ -24,11 +24,19 @@ dependencies:
   intl: ^0.18.1
   shared_preferences: ^2.2.3  # ローカル用
   cloud_firestore: ^4.8.3     # Firebase用
-  firebase_core: ^2.30.0      # Firebase用
+  firebase_core: ^2.30.0
+  numberpicker: ^2.1.2
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: images/icon.jpg
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.11.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

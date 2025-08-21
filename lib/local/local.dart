@@ -44,16 +44,16 @@ class LocalPageState extends ConsumerState<LocalPage> {
       ),
 
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 300,
-              child: Image.asset('images/local.jpg'),
-            ),
-            Expanded(
-              child: Column(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 270,
+                child: Image.asset('images/local.jpg'),
+              ),
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
 
@@ -157,10 +157,11 @@ class LocalPageState extends ConsumerState<LocalPage> {
                       ),
                     ],
                   ),
+                  SizedBox( height: 70,),
                 ],
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
