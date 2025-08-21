@@ -130,3 +130,51 @@ class _ScrollableRideTableState extends State<ScrollableRideTable> {
 
 
 
+
+/// 登録情報を表現するデータクラスです。
+class RegistrationInfo {
+  /// 一意の識別子。
+  final String id;
+
+  /// 電話番号。
+  final String phoneNumber;
+
+  /// 住所。
+  final String address;
+
+  final String schoolName;
+
+  /// [RegistrationInfo] の新しいインスタンスを作成します。
+  ///
+  /// すべてのパラメータは必須です。
+  RegistrationInfo({
+    required this.id,
+    required this.phoneNumber,
+    required this.address,
+    required this.schoolName,
+  });
+
+  /// DropdownMenuなどのUIコンポーネントで表示するための整形済み文字列を返します。
+  ///
+  /// 例: "090-1111-1111 - 東京都渋谷区..."
+  String get displayString => '$phoneNumber - $schoolName';
+
+  /// このオブジェクトが他のオブジェクトと等しいかどうかを判断します。
+  ///
+  /// [id] プロパティが一致する場合に true を返します。
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true; // 同じインスタンスなら true
+    return other is RegistrationInfo && // 型が同じか
+        runtimeType == other.runtimeType &&
+        id == other.id; // id が同じか
+  }
+
+  /// このオブジェクトのハッシュコードを返します。
+  ///
+  /// [id] のハッシュコードに基づいています。
+  @override
+  int get hashCode => id.hashCode;
+}
+
+

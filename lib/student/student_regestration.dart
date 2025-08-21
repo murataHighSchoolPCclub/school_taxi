@@ -140,7 +140,7 @@ class _CalendarWithLocalStorageState extends State<CalendarWithLocalStorage> {
                 if (_reservations[key]?.isNotEmpty ?? false) {
                   return Positioned(
                     bottom: 1,
-                    child: Icon(Icons.text_fields, size: 6, color: Colors.green),
+                    child: Icon(Icons.text_fields, size: 10, color: Colors.green),
                   );
                 }
                 return null;
