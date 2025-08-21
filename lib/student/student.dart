@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:school_taxi/student/student.dart';
-import 'package:school_taxi/student/student_login.dart';
-import 'package:school_taxi/student/student_regestration.dart';
+import 'package:school_taxi/student/student_registration.dart';
+import 'package:school_taxi/student/student_reserve.dart';
 
 import '../button.dart';
 
@@ -126,7 +126,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
                               });
                               if(!(selectedValue1 == null ||
                                   selectedValue2 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentLoginPage(title: "新規登録")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegistrationPage(title: "新規登録")));
                               }
                             },
                             child: Text("新規登録", style: TextStyle(color: Colors.white, fontSize: 30),)
@@ -147,7 +147,7 @@ class StudentPageState extends ConsumerState<StudentPage> {
                                   selectedValue2 == null ||
                                   selectedValue3 == null ||
                                   selectedValue4 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentReservePage(title: "予約")));
 
                               }
                             },

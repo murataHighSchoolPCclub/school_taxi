@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:school_taxi/student/student.dart';
-import 'package:school_taxi/student/student_login.dart';
-import 'package:school_taxi/student/student_regestration.dart';
+import 'package:school_taxi/student/student_registration.dart';
+import 'package:school_taxi/student/student_reserve.dart';
 
 import '../button.dart';
 import 'local_login.dart';

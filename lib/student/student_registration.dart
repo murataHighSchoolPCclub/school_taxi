@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:school_taxi/student/student.dart';
 
-import 'student_regestration.dart';
+import 'student_reserve.dart';
 
 import '../button.dart';
 
-class StudentLoginPage extends ConsumerStatefulWidget {
-  const StudentLoginPage({super.key, required this.title});
+class StudentRegistrationPage extends ConsumerStatefulWidget {
+  const StudentRegistrationPage({super.key, required this.title});
 
   final String title;
 
   @override
-  StudentLoginPageState createState() => StudentLoginPageState();
+  StudentRegistrationPageState createState() => StudentRegistrationPageState();
 }
-class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
+class StudentRegistrationPageState extends ConsumerState<StudentRegistrationPage> {
   String? selectedValue1;
   String? selectedValue2;
   String? selectedValue3;
@@ -146,7 +147,7 @@ class StudentLoginPageState extends ConsumerState<StudentLoginPage> {
                                   selectedValue3 == null ||
                                   selectedValue4 == null ||
                                   selectedValue5 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentRegestrationPage(title: "予約")));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentPage(title: "生徒")));
 
                               }
                             },

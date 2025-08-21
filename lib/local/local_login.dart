@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../student/student_regestration.dart';
+import '../student/student_reserve.dart';
 
 import '../button.dart';
 import 'local_screen.dart';
