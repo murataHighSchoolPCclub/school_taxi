@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:school_taxi/local/local_school.dart';
+
 import 'package:school_taxi/student/student.dart';
 import 'package:school_taxi/student/student_regestration.dart';
 import '../class.dart';
@@ -13,6 +13,8 @@ class LocalMainPage extends ConsumerStatefulWidget {
 
   final String title;
   final String jititai;
+
+
 
 
 
@@ -45,6 +47,66 @@ class LocalMainPageState extends ConsumerState<LocalMainPage> with SingleTickerP
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final TextEditingController _localSchoolController = TextEditingController();
+
+
+  RegistrationInfo? _selectedRegistration;
+
+  final TextEditingController _individualDropdownController = TextEditingController();
+  RegistrationInfo? _selectedIndividualRegistration;
+
+  void _updateStudentListForSelectedSchool(String? schoolName) {
+    setState(() { // UIの再描画をトリガーするために setState を呼び出す
+      // 1. 選択された学校名を状態変数に保存
+      _selectedSchoolName = schoolName;
+
+      // 2. 選択された学校名に基づいて生徒リストをフィルタリング
+      if (schoolName != null && schoolName.isNotEmpty) {
+        // _registrations リスト (全生徒情報) から、
+        // schoolName プロパティが選択された学校名と一致する要素のみを抽出して新しいリストを作成
+        _filteredStudentsBySchool = _registrations
+            .where((info) => info.schoolName == schoolName)
+            .toList();
+      } else {
+        // 学校名が選択されていない (null または空文字の) 場合は、
+        // 表示する生徒リストを空にする
+        _filteredStudentsBySchool = [];
+      }
+      _filteredStudentsCount = _filteredStudentsBySchool.length;
+    });
+  }
+
+  // 学校名を選択するためのコントローラーと状態
+  final TextEditingController _schoolDropdownController = TextEditingController();
+  String? _selectedSchoolName; // 選択された学校名を保持
+
+  final List<RegistrationInfo> _registrations = [
+    RegistrationInfo(id: 'natori', phoneNumber: '090-1234-5678', address: '東京都千代田区1-1-1', schoolName: '名取高校'),
+    RegistrationInfo(id: 'siroisi', phoneNumber: '080-8765-4321', address: '大阪府大阪市中央区2-2-2', schoolName: '白石高校'),
+    RegistrationInfo(id: 'sibata', phoneNumber: '070-1122-3344', address: '愛知県名古屋市中村区3-3-3', schoolName: '柴田高校'),
+    RegistrationInfo(id: 'murata', phoneNumber: '090-5555-0000', address: '北海道札幌市北区4-4-4', schoolName: '村田高校'),
+  ];
+
+  List<String> _availableSchoolNames = [];
+
+  // 選択された学校の生徒リスト
+  List<RegistrationInfo> _filteredStudentsBySchool = [
+
+  ];
+
+  int _totalRegistrationsCount = 0; // 全登録情報数
+  int _filteredStudentsCount = 0;   // フィルタリングされた生徒数
+
+
+
+
+
+
+
+  final TextEditingController _dropdownController = TextEditingController();
+
+
+
 
   // TabController を宣言します
   late TabController _tabController;
@@ -64,6 +126,16 @@ class LocalMainPageState extends ConsumerState<LocalMainPage> with SingleTickerP
     super.initState();
     // TabController を初期化します
     _tabController = TabController(length: 3, vsync: this);
+
+    super.initState();
+    _availableSchoolNames = _registrations.map((info) => info.schoolName).toSet().toList();
+    _availableSchoolNames.sort();
+
+    // --- initState で全登録情報数を初期化 ---
+    _totalRegistrationsCount = _registrations.length;
+
+    // 初期状態でフィルタリングされた生徒数は0 (または特定の学校を初期選択する場合はその数)
+    _filteredStudentsCount = _filteredStudentsBySchool.length;
   }
 
   @override
@@ -71,6 +143,29 @@ class LocalMainPageState extends ConsumerState<LocalMainPage> with SingleTickerP
     // TabController を破棄します
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _customAddNewSchool() {
+    print("メイン画面: カスタム新規登録アクション！");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('メイン画面：カスタム新規登録が実行されました！')),
+    );
+    // 実際の処理
+  }
+
+  void _customEditSchool(DummyRegistrationInfo? school) {
+    if (school != null) {
+      print("メイン画面: カスタム編集アクション！対象: ${school.displayString}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('メイン画面：カスタム編集 (${school.displayString})が実行されました！')),
+      );
+      // 実際の処理
+    } else {
+      print("メイン画面: カスタム編集アクション！対象が選択されていません。");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('メイン画面：編集する学校が選択されていません。')),
+      );
+    }
   }
 
   @override
@@ -281,30 +376,53 @@ class LocalMainPageState extends ConsumerState<LocalMainPage> with SingleTickerP
           // タブ 2 のコンテンツ
           SingleChildScrollView(
             child: Column(
+              children: [
+                StaticSchoolInfoTabContent(
+
+
+                ),
+
+
+              ],
+            ),
+
+          ),
+
+
+          // タブ 3 のコンテンツ
+          SingleChildScrollView(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    '登録済みの学校：$schoolNumber',
+                  '登録済みの学校：$schoolNumber',
                   style: TextStyle(fontSize: 27.0),
                 ),
-                NavigateButton(
-                    title: '登録済みの学校',
-                    next: LocalSchoolPage(title: '登録学校詳細',),
-                    buttonColor: Colors.orange,
-                    textColor: Colors.white
-                ),
+
 
               ],
             ),
           ),
+        ],
+      ),
 
-          // タブ 3 のコンテンツ
-          SingleChildScrollView(
-            child: Center(
-              child: Text('タブ 3 のコンテンツ'),
-            ),
+
+
+    );
+  }
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.grey[700], size: 20),
+          SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
+          Expanded(child: Text(value)),
         ],
       ),
     );

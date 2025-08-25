@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:school_taxi/student/student.dart';
-import 'package:school_taxi/student/student_registration.dart';
 import 'package:school_taxi/student/student_reserve.dart';
 
 import '../button.dart';
@@ -138,11 +136,9 @@ class LocalPageState extends ConsumerState<LocalPage> {
                         child: ElevatedButton(
                             style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
                             onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => LocalMainPage(title: "管理画面", jititai: '$selectedValue1',)));
                               setState(() {
-                                showError1 = selectedValue1 == null;
-                                showError2 = selectedValue2 == null;
-                                showError3 = selectedValue3 == null;
-                                showError4 = selectedValue4 == null;
+
                               });
                               if(!(selectedValue1 == null ||
                                   selectedValue2 == null ||
