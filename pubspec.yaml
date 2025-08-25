@@ -26,6 +26,10 @@ dependencies:
   cloud_firestore: ^4.8.3     # Firebase用
   firebase_core: ^2.30.0
   numberpicker: ^2.1.2
+  flutter_map: ^6.1.0  # 最新バージョンを確認してください
+  latlong2: ^0.9.0    # flutter_map で緯度経度を扱うために必要
+  geolocator: ^10.1.0 # 最新バージョンを確認してください
+  url_launcher: ^6.1.14 # または最新バージョン
 
 
 flutter_icons:
