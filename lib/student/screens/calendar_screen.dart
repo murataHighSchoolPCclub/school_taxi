@@ -108,6 +108,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         lastDay: DateTime.utc(2030, 12, 31),
         focusedDay: _focused,
         onDaySelected: (d, f) {
+          print('onDaySelected called! Selected day: $d, Focused day: $f');
+
           setState(() {
             _openForm(d);
             _focused = f;

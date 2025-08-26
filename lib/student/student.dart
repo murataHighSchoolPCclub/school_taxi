@@ -143,13 +143,8 @@ class StudentPageState extends ConsumerState<StudentPage> {
                                 showError3 = selectedValue3 == null;
                                 showError4 = selectedValue4 == null;
                               });
-                              if(!(selectedValue1 == null ||
-                                  selectedValue2 == null ||
-                                  selectedValue3 == null ||
-                                  selectedValue4 == null )){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StudentReservePage(title: "予約")));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => StudentReservePage(title: "予約")));
 
-                              }
                             },
                             child: Text("ログイン", style: TextStyle(color: Colors.white, fontSize: 30)  )
                         ),

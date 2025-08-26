@@ -284,7 +284,7 @@ class TaxiDriverMapPageState extends State<TaxiDriverMapPage> with TickerProvide
             children: [
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.school_taxi',
+                userAgentPackageName: 'com.example.school-taxi',
               ),
               MarkerLayer(markers: _markers),
               RichAttributionWidget(

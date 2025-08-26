@@ -392,17 +392,16 @@ class LocalMainPageState extends ConsumerState<LocalMainPage> with SingleTickerP
           // タブ 3 のコンテンツ
           SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '登録済みの学校：$schoolNumber',
-                  style: TextStyle(fontSize: 27.0),
+                StaticTaxiInfoTabContent(
+
+
                 ),
 
 
               ],
             ),
+
           ),
         ],
       ),

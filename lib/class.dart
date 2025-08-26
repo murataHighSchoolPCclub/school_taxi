@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // DateFormat を使うために必要
+import 'package:intl/intl.dart';
+import 'package:school_taxi/local/local_taxi_company_create.dart';
+
+import 'local/local_school_create.dart'; // DateFormat を使うために必要
 
 // データモデル (前のステップで定義)
 class RideRecord {
@@ -188,69 +191,95 @@ class RegistrationInfo {
 
 // ダミーデータモデル
 class DummyRegistrationInfo {
-  final String id;
-  final String displayString;
-  final String phoneNumber;
-  final String address;
-  final String schoolName;
+   final String id;
+   final String displayString;
+   final String phoneNumber;
+   final String address;
+   final String schoolName;
+   final bool isNewEntryAction;
 
-  DummyRegistrationInfo({
-    required this.id,
-    required this.displayString,
-    this.phoneNumber = "090-xxxx-xxxx",
-    this.address = "ダミー住所",
-    this.schoolName = "ダミー学校名",
-  });
+   DummyRegistrationInfo({
+     required this.id,
+     required this.displayString,
+     this.phoneNumber = "090-xxxx-xxxx",
+     this.address = "ダミー住所",
+     this.schoolName = "ダミー学校名",
+     this.isNewEntryAction = false,
+   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is DummyRegistrationInfo &&
-              runtimeType == other.runtimeType &&
-              id == other.id;
+   @override
+   bool operator ==(Object other) =>
+       identical(this, other) ||
+       other is DummyRegistrationInfo &&
+           runtimeType == other.runtimeType &&
+           id == other.id;
 
-  @override
-  int get hashCode => id.hashCode;
-}
+   @override
+   int get hashCode => id.hashCode;
+ }
 
-class StaticSchoolInfoTabContent extends StatefulWidget {
-  // オプションで外部からFABのアクションを注入できるようにする
-  final VoidCallback? onAddPressed;
-  final ValueChanged<DummyRegistrationInfo?>? onEditPressed; // 編集対象を渡せるようにする
+ const String newEntryActionId = '__NEW_SCHOOL_ENTRY_ACTION_ID__';
 
-  const StaticSchoolInfoTabContent({
-    Key? key,
-    this.onAddPressed,
-    this.onEditPressed,
-  }) : super(key: key);
+ class StaticSchoolInfoTabContent extends StatefulWidget {
+   final VoidCallback? onAddPressed;
+   final ValueChanged<DummyRegistrationInfo?>? onEditPressed;
+   final VoidCallback? onAddNewSchoolFromDropdown;
 
-  @override
-  _StaticSchoolInfoTabContentState createState() =>
-      _StaticSchoolInfoTabContentState();
-}
+   const StaticSchoolInfoTabContent({
+     Key? key,
+     this.onAddPressed,
+     this.onEditPressed,
+     this.onAddNewSchoolFromDropdown,
+   }) : super(key: key);
+
+   @override
+   _StaticSchoolInfoTabContentState createState() =>
+       _StaticSchoolInfoTabContentState();
+ }
+
+
 
 class _StaticSchoolInfoTabContentState
     extends State<StaticSchoolInfoTabContent> {
-  final List<DummyRegistrationInfo> _dummySchools = [
+  // 元の _dummySchools は実際の学校リストとして扱う
+  final List<DummyRegistrationInfo> _actualSchools = [
     DummyRegistrationInfo(id: 's_001', schoolName: 'さくら小学校', displayString: 'さくら小学校 (03-1234-xxxx)', phoneNumber: '03-1234-5678', address: '東京都さくら区1-1'),
     DummyRegistrationInfo(id: 's_002', schoolName: 'ひまわり中学校', displayString: 'ひまわり中学校 (045-987-xxxx)', phoneNumber: '045-987-6543', address: '神奈川県ひまわり市2-2'),
     DummyRegistrationInfo(id: 's_003', schoolName: 'もみじ高等学校', displayString: 'もみじ高等学校 (048-111-xxxx)', phoneNumber: '048-111-2222', address: '埼玉県もみじ市3-3'),
   ];
 
-  DummyRegistrationInfo? _selectedSchool;
+  // ドロップダウンに表示するアイテムのリスト（「+ 新規作成」を含む）
+  late List<DummyRegistrationInfo> _dropdownItems;
+
+  DummyRegistrationInfo? _selectedSchool; // 実際に選択されている「学校」のデータ
   List<DummyRegistrationInfo> _dummyStudents = [];
 
   @override
   void initState() {
     super.initState();
-    if (_dummySchools.isNotEmpty) {
-      _selectedSchool = _dummySchools.first;
+    _prepareDropdownItems(); // ドロップダウンアイテムを準備
+    if (_actualSchools.isNotEmpty) {
+      // 初期選択は「+ 新規作成」ではなく、実際の学校リストの最初のものにする
+      _selectedSchool = _actualSchools.first;
       _updateDummyStudents(_selectedSchool);
     }
   }
 
+  void _prepareDropdownItems() {
+    _dropdownItems = [
+      DummyRegistrationInfo(
+        id: newEntryActionId, // 特別なIDを使用
+        displayString: '＋ 新規作成',
+        schoolName: '', // 他のフィールドはダミーでOK
+        isNewEntryAction: true, // これが「新規作成」アクションであることを示すフラグ
+      ),
+      ..._actualSchools, // 実際の学校リストを展開して結合
+    ];
+  }
+
   void _updateDummyStudents(DummyRegistrationInfo? school) {
-    if (school == null) {
+    // 選択されたのが「新規作成」アクションやnullの場合は生徒リストを空にする
+    if (school == null || school.isNewEntryAction) {
       _dummyStudents = [];
     } else {
       _dummyStudents = [
@@ -287,39 +316,53 @@ class _StaticSchoolInfoTabContentState
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold を削除し、UIコンテンツのルートを返す
-    // (このウィジェットは TabBarView の children に直接配置されることを想定)
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '学校の登録情報を選択してください:',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+
+
           SizedBox(height: 10),
           DropdownMenu<DummyRegistrationInfo>(
-            width: MediaQuery.of(context).size.width - 40, // 幅を明示的に指定
+            width: MediaQuery.of(context).size.width - 40,
             label: const Text('学校を選択'),
             initialSelection: _selectedSchool,
             dropdownMenuEntries:
-            _dummySchools.map((DummyRegistrationInfo school) {
+            _dropdownItems.map((DummyRegistrationInfo item) {
               return DropdownMenuEntry<DummyRegistrationInfo>(
-                value: school,
-                label: school.displayString,
+                value: item,
+                label: item.displayString,
+                style: item.isNewEntryAction
+                    ? ButtonStyle(
+                  textStyle: MaterialStateProperty.all(TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary)),
+                )
+                    : null,
               );
             }).toList(),
             onSelected: (DummyRegistrationInfo? newValue) {
-              setState(() {
-                _selectedSchool = newValue;
-                _updateDummyStudents(newValue);
-              });
-              print('選択された学校: ${newValue?.displayString}');
+              if (newValue != null && newValue.isNewEntryAction) {
+                print('「＋ 新規学校作成」が選択されました。');
+                if (widget.onAddNewSchoolFromDropdown != null) {
+                  widget.onAddNewSchoolFromDropdown!();
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const NewSchoolCreationPage(),
+                  ));
+                }
+              } else {
+                setState(() {
+                  _selectedSchool = newValue;
+                  _updateDummyStudents(newValue);
+                });
+                print('選択された学校: ${newValue?.displayString}');
+              }
             },
           ),
           SizedBox(height: 20),
-          if (_selectedSchool != null)
+          if (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
             Card(
               elevation: 3,
               margin: const EdgeInsets.only(bottom: 20.0),
@@ -352,10 +395,9 @@ class _StaticSchoolInfoTabContentState
               child: Text("学校を選択してください。", style: Theme.of(context).textTheme.bodyLarge),
             ),
           Divider(thickness: 1.5, height: 40),
-          Text('選択した学校の生徒一覧を表示:',
-              style: Theme.of(context).textTheme.titleLarge),
+
           SizedBox(height: 20),
-          if (_selectedSchool != null)
+          if (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -407,19 +449,18 @@ class _StaticSchoolInfoTabContentState
     );
   }
 
-  // このウィジェットに関連するFABのUI定義 (呼び出し元で使用)
-  Widget buildFloatingActionButtons(BuildContext context) { // contextが必要なら渡す
+  Widget buildFloatingActionButtons(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         FloatingActionButton(
           onPressed: widget.onAddPressed ?? () {
-            print('新規登録 (デフォルト動作)');
+            print('FAB: 新規登録 (デフォルト動作)');
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('新規登録ボタンが押されました (デフォルト)')),
+              const SnackBar(content: Text('FAB: 新規登録ボタンが押されました (デフォルト)')),
             );
           },
-          heroTag: 'content_add_fab', // HeroTagは呼び出し側でユニーク性を担保する
+          heroTag: 'content_add_fab_state_rewrite', // HeroTagをユニークにする
           tooltip: '学校を新規登録',
           child: const Icon(Icons.add),
           backgroundColor: Colors.orange,
@@ -427,16 +468,19 @@ class _StaticSchoolInfoTabContentState
         const SizedBox(height: 16),
         FloatingActionButton(
           onPressed: () {
+            final schoolToEdit = (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
+                ? _selectedSchool
+                : null;
             if (widget.onEditPressed != null) {
-              widget.onEditPressed!(_selectedSchool); // 現在選択中の学校を渡す
+              widget.onEditPressed!(schoolToEdit);
             } else {
-              print('編集 (デフォルト動作) - 対象: ${_selectedSchool?.displayString}');
+              print('FAB: 編集 (デフォルト動作) - 対象: ${schoolToEdit?.displayString}');
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('編集ボタン：${_selectedSchool?.displayString ?? "未選択"} (デフォルト)')),
+                SnackBar(content: Text('FAB: 編集ボタン：${schoolToEdit?.displayString ?? "未選択"} (デフォルト)')),
               );
             }
           },
-          heroTag: 'content_edit_fab', // HeroTagは呼び出し側でユニーク性を担保する
+          heroTag: 'content_edit_fab_state_rewrite', // HeroTagをユニークにする
           tooltip: '選択した学校情報を編集',
           child: const Icon(Icons.edit),
           backgroundColor: Colors.blue,
@@ -445,3 +489,275 @@ class _StaticSchoolInfoTabContentState
     );
   }
 }
+
+
+class StaticTaxiInfoTabContent extends StatefulWidget {
+  final VoidCallback? onAddPressed;
+  final ValueChanged<DummyRegistrationInfo?>? onEditPressed;
+  final VoidCallback? onAddNewSchoolFromDropdown;
+
+  const StaticTaxiInfoTabContent({
+    Key? key,
+    this.onAddPressed,
+    this.onEditPressed,
+    this.onAddNewSchoolFromDropdown,
+  }) : super(key: key);
+
+  @override
+  _StaticTaxiInfoTabContentState createState() =>
+      _StaticTaxiInfoTabContentState();
+}
+
+
+
+class _StaticTaxiInfoTabContentState
+    extends State<StaticTaxiInfoTabContent> {
+  // 元の _dummySchools は実際の学校リストとして扱う
+  final List<DummyRegistrationInfo> _actualSchools = [
+    DummyRegistrationInfo(id: 's_001', schoolName: 'さくら小学校', displayString: 'さくら小学校 (03-1234-xxxx)', phoneNumber: '03-1234-5678', address: '東京都さくら区1-1'),
+    DummyRegistrationInfo(id: 's_002', schoolName: 'ひまわり中学校', displayString: 'ひまわり中学校 (045-987-xxxx)', phoneNumber: '045-987-6543', address: '神奈川県ひまわり市2-2'),
+    DummyRegistrationInfo(id: 's_003', schoolName: 'もみじ高等学校', displayString: 'もみじ高等学校 (048-111-xxxx)', phoneNumber: '048-111-2222', address: '埼玉県もみじ市3-3'),
+  ];
+
+  // ドロップダウンに表示するアイテムのリスト（「+ 新規作成」を含む）
+  late List<DummyRegistrationInfo> _dropdownItems;
+
+  DummyRegistrationInfo? _selectedSchool; // 実際に選択されている「学校」のデータ
+  List<DummyRegistrationInfo> _dummyStudents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _prepareDropdownItems(); // ドロップダウンアイテムを準備
+    if (_actualSchools.isNotEmpty) {
+      // 初期選択は「+ 新規作成」ではなく、実際の学校リストの最初のものにする
+      _selectedSchool = _actualSchools.first;
+      _updateDummyStudents(_selectedSchool);
+    }
+  }
+
+  void _prepareDropdownItems() {
+    _dropdownItems = [
+      DummyRegistrationInfo(
+        id: newEntryActionId, // 特別なIDを使用
+        displayString: '＋ 新規タクシー会社作成',
+        schoolName: '', // 他のフィールドはダミーでOK
+        isNewEntryAction: true, // これが「新規作成」アクションであることを示すフラグ
+      ),
+      ..._actualSchools, // 実際の学校リストを展開して結合
+    ];
+  }
+
+  void _updateDummyStudents(DummyRegistrationInfo? school) {
+    // 選択されたのが「新規作成」アクションやnullの場合は生徒リストを空にする
+    if (school == null || school.isNewEntryAction) {
+      _dummyStudents = [];
+    } else {
+      _dummyStudents = [
+        DummyRegistrationInfo(
+            id: '${school.id}_student1',
+            schoolName: school.schoolName,
+            displayString: '${school.schoolName} 生徒X',
+            phoneNumber: '090-XXXX-001X',
+            address: '${school.address} 学生寮X'),
+        DummyRegistrationInfo(
+            id: '${school.id}_student2',
+            schoolName: school.schoolName,
+            displayString: '${school.schoolName} 生徒Y',
+            phoneNumber: '090-YYYY-001Y',
+            address: '${school.address} 学生寮Y'),
+      ];
+    }
+  }
+
+  Widget _buildInfoRow(
+      BuildContext context, IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.grey[700], size: 20),
+          SizedBox(width: 8),
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+
+
+          SizedBox(height: 10),
+          DropdownMenu<DummyRegistrationInfo>(
+            width: MediaQuery.of(context).size.width - 40,
+            label: const Text('タクシー会社を選択'),
+            initialSelection: _selectedSchool,
+            dropdownMenuEntries:
+            _dropdownItems.map((DummyRegistrationInfo item) {
+              return DropdownMenuEntry<DummyRegistrationInfo>(
+                value: item,
+                label: item.displayString,
+                style: item.isNewEntryAction
+                    ? ButtonStyle(
+                  textStyle: MaterialStateProperty.all(TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary)),
+                )
+                    : null,
+              );
+            }).toList(),
+            onSelected: (DummyRegistrationInfo? newValue) {
+              if (newValue != null && newValue.isNewEntryAction) {
+                print('「＋ 新規学校作成」が選択されました。');
+                if (widget.onAddNewSchoolFromDropdown != null) {
+                  widget.onAddNewSchoolFromDropdown!();
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const NewTaxiCreationPage(),
+                  ));
+                }
+              } else {
+                setState(() {
+                  _selectedSchool = newValue;
+                  _updateDummyStudents(newValue);
+                });
+                print('選択されたタクシー会社: ${newValue?.displayString}');
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          if (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
+            Card(
+              elevation: 3,
+              margin: const EdgeInsets.only(bottom: 20.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('選択されたタクシー会社の情報:',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 12),
+                    _buildInfoRow(context, Icons.phone, '電話番号: ',
+                        _selectedSchool!.phoneNumber),
+                    _buildInfoRow(context, Icons.location_on, '住所: ',
+                        _selectedSchool!.address),
+                    _buildInfoRow(context, Icons.account_balance, '学校名: ',
+                        _selectedSchool!.schoolName),
+                    _buildInfoRow(
+                        context, Icons.perm_identity, 'ID: ', _selectedSchool!.id),
+                  ],
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.only(bottom:20.0, top: 10.0),
+              child: Text("タクシー会社を選択してください。", style: Theme.of(context).textTheme.bodyLarge),
+            ),
+          Divider(thickness: 1.5, height: 40),
+
+          SizedBox(height: 20),
+          if (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    '${_selectedSchool?.schoolName ?? "会社"}のドライバー一覧 (${_dummyStudents.length}名):',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                if (_dummyStudents.isNotEmpty)
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _dummyStudents.length,
+                    itemBuilder: (context, index) {
+                      final student = _dummyStudents[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 6.0),
+                        child: ListTile(
+                            leading: CircleAvatar(
+                                child: Text(student.id.isNotEmpty ? student.id.substring(student.id.length -2, student.id.length).toUpperCase() : "・" )),
+                            title: Text(student.displayString),
+                            subtitle: Text("電話: ${student.phoneNumber}\n住所: ${student.address}"),
+                            onTap: () {
+                              print('ダミー生徒タップ: ${student.displayString}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('${student.displayString} さんがタップされました。')),
+                              );
+                            }
+                        ),
+                      );
+                    },
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text("この会社にはドライバーのダミーデータがありません。"),
+                  )
+              ],
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Text("まず会社を選択してください。"),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFloatingActionButtons(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        FloatingActionButton(
+          onPressed: widget.onAddPressed ?? () {
+            print('FAB: 新規登録 (デフォルト動作)');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('FAB: 新規登録ボタンが押されました (デフォルト)')),
+            );
+          },
+          heroTag: 'content_add_fab_state_rewrite', // HeroTagをユニークにする
+          tooltip: '学校を新規登録',
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.orange,
+        ),
+        const SizedBox(height: 16),
+        FloatingActionButton(
+          onPressed: () {
+            final schoolToEdit = (_selectedSchool != null && !_selectedSchool!.isNewEntryAction)
+                ? _selectedSchool
+                : null;
+            if (widget.onEditPressed != null) {
+              widget.onEditPressed!(schoolToEdit);
+            } else {
+              print('FAB: 編集 (デフォルト動作) - 対象: ${schoolToEdit?.displayString}');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('FAB: 編集ボタン：${schoolToEdit?.displayString ?? "未選択"} (デフォルト)')),
+              );
+            }
+          },
+          heroTag: 'content_edit_fab_state_rewrite', // HeroTagをユニークにする
+          tooltip: '選択した学校情報を編集',
+          child: const Icon(Icons.edit),
+          backgroundColor: Colors.blue,
+        ),
+      ],
+    );
+  }
+}
+

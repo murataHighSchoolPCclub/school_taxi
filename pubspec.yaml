@@ -20,8 +20,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.0
-  table_calendar: ^3.0.9
-  intl: ^0.18.1
+  table_calendar: ^3.1.0
+  intl: ^0.19.0
   shared_preferences: ^2.2.3  # ローカル用
   cloud_firestore: ^4.8.3     # Firebase用
   firebase_core: ^2.30.0
