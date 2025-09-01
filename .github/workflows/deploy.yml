@@ -4,7 +4,7 @@ name: Flutter Web Deploy
 on:
   push:
     branches:
-      - main  # mainブランチにpushされたら動作
+      - master  # mainブランチにpushされたら動作
 
 jobs:
   build-deploy:
